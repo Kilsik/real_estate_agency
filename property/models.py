@@ -7,11 +7,12 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Flat(models.Model):
     ' Недвижимость '
 
-    owner = models.CharField('ФИО владельца', max_length=200)
+    owner = models.CharField('ФИО владельца', max_length=200, db_index=True)
     owner_pure_phone = PhoneNumberField(
         'Нормализованный номер владельца',
         blank=True,
-        null=True)
+        null=True,
+        db_index=True)
     owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     new_building = models.BooleanField('Новое здание', blank=True, null=True)
     created_at = models.DateTimeField(
@@ -30,10 +31,12 @@ class Flat(models.Model):
         'Район города, где находится квартира',
         max_length=50,
         blank=True,
-        help_text='Чертаново Южное')
+        help_text='Чертаново Южное',
+        db_index=True)
     address = models.TextField(
         'Адрес квартиры',
-        help_text='ул. Подольских курсантов д.5 кв.4')
+        help_text='ул. Подольских курсантов д.5 кв.4',
+        db_index=True)
     floor = models.CharField(
         'Этаж',
         max_length=3,
@@ -76,7 +79,8 @@ class Complaint(models.Model):
 
     flat = models.ForeignKey(Flat,
         on_delete=models.SET_NULL, null=True,
-        verbose_name='Квартира, на которую пожаловались')
+        verbose_name='Квартира, на которую пожаловались',
+        related_name='related_complaints')
 
     complaint_text = models.TextField('Текст жалобы')
 
@@ -84,17 +88,18 @@ class Complaint(models.Model):
 class Owner(models.Model):
     ' Собственники '
 
-    full_name = models.CharField('ФИО владельца', max_length=200)
+    full_name = models.CharField('ФИО владельца', max_length=200, db_index=True)
     phonenumber = models.CharField('Номер владельца', max_length=20)
     pure_phone = PhoneNumberField(
         'Нормализованный номер владельца',
         blank=True,
-        null=True)
+        null=True,
+        db_index=True)
     flats = models.ManyToManyField(
         Flat,
         verbose_name='Квартиры в собственности',
-        related_name='owners',
-        null=True)
+        related_name='related_owners',
+        null=True,)
 
     def __str__(self):
-        return f'{self.full_name}, тел. {pure_phone}'
+        return f'{self.full_name}, тел. {self.pure_phone}'
