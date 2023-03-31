@@ -63,7 +63,7 @@ class Flat(models.Model):
     def display_pure_phone(self):
         ' Вывод телефонов собственников в списке недвижимости '
 
-        return ', '.join([str(owner.pure_phone) for owner in self.related_owners.all()])
+        return ', '.join([str(owner.pure_phone) for owner in self.owner_set.all()])
 
     display_pure_phone.short_description = 'Телефоны собственников'
 
@@ -98,7 +98,7 @@ class Owner(models.Model):
     flats = models.ManyToManyField(
         Flat,
         verbose_name='Квартиры в собственности',
-        related_name='related_owners',
+#        related_name='related_owners',
         null=True,)
 
     def __str__(self):
