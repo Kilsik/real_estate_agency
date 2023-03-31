@@ -7,13 +7,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Flat(models.Model):
     ' Недвижимость '
 
-    owner = models.CharField('ФИО владельца', max_length=200, db_index=True)
-    owner_pure_phone = PhoneNumberField(
-        'Нормализованный номер владельца',
-        blank=True,
-        null=True,
-        db_index=True)
-    owners_phonenumber = models.CharField('Номер владельца', max_length=20)
     new_building = models.BooleanField('Новое здание', blank=True, null=True)
     created_at = models.DateTimeField(
         'Когда создано объявление',
@@ -66,6 +59,13 @@ class Flat(models.Model):
 
     def __str__(self):
         return f'{self.town}, {self.address} ({self.price}р.)'
+
+    def display_pure_phone(self):
+        ' Вывод телефонов собственников в списке недвижимости '
+
+        return ', '.join([str(owner.pure_phone) for owner in self.related_owners.all()])
+
+    display_pure_phone.short_description = 'Телефоны собственников'
 
 
 class Complaint(models.Model):
