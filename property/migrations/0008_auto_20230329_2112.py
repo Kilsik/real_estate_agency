@@ -12,7 +12,7 @@ def set_owner_pure_phone(apps, schema_editor):
     ' Setting owner pure phone '
 
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
+    for flat in Flat.objects.all().iterator(100):
         phonenumber = phonenumbers.parse(flat.owners_phonenumber, COUNTRY)
         if phonenumbers.is_valid_number(phonenumber):
             flat.owner_pure_phone = phonenumber
@@ -23,7 +23,7 @@ def set_owner_pure_phone(apps, schema_editor):
 
 def move_backward(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
+    for flat in Flat.objects.all().iterator(100):
         flat.owner_pure_phone = None
         flat.save()
 

@@ -7,15 +7,15 @@ def relate_owners_with_flats(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
     Owner = apps.get_model('property', 'Owner')
     flats = Flat.objects.all()
-    for flat in flats:
+    for flat in flats.iterator(100):
         owner = flat.owner
         owners_phonenumber = flat.owners_phonenumber
         owner_pure_phone = flat.owner_pure_phone
-        related_owner = Owner.objects.get_or_create(full_name=owner,
+        related_owner, __ = Owner.objects.get_or_create(full_name=owner,
             pure_phone=owner_pure_phone, defaults={
             'phonenumber': owners_phonenumber
             })
-        related_owner[0].flats.add(flat)
+        related_owner.flats.add(flat)
 
 
 class Migration(migrations.Migration):
