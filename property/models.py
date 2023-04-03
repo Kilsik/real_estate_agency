@@ -5,7 +5,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Flat(models.Model):
-    ''' Недвижимость '''
+    """ Недвижимость """
 
     new_building = models.BooleanField('Новое здание', blank=True, null=True)
     created_at = models.DateTimeField(
@@ -69,7 +69,7 @@ class Flat(models.Model):
 
 
 class Complaint(models.Model):
-    ''' Жалобы '''
+    """ Жалобы """
 
     user = models.ForeignKey(
         User,
@@ -87,7 +87,7 @@ class Complaint(models.Model):
 
 
 class Owner(models.Model):
-    ''' Собственники '''
+    """ Собственники """
 
     full_name = models.CharField('ФИО владельца', max_length=200, db_index=True)
     phonenumber = models.CharField('Номер владельца', max_length=20)
